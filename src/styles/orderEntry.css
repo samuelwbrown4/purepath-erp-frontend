@@ -1,0 +1,17 @@
+.mantine-Table-td{
+    align-items: right;
+}
+
+.qty{
+    max-width: 200px !important;
+}
+
+.table-d{
+    width: 'auto' !important;
+    justify-content: right !important;
+}
+
+.table-d:nth-child(2) {
+    width: 150px;
+    text-align: right;
+}
