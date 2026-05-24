@@ -8,10 +8,66 @@
 
 .table-d{
     width: 'auto' !important;
-    justify-content: right !important;
+    text-align: center !important;
 }
 
 .table-d:nth-child(2) {
     width: 150px;
     text-align: right;
 }
+
+#root{
+    background-color: #e8edf2;
+    color: #313e43
+}
+
+.icon{
+    cursor: pointer;
+    
+}
+
+.icon:hover{
+    scale: 1.2;
+}
+
+.icon-div:hover{
+    scale: 1.05;
+}
+
+.input input::placeholder {
+    color: #313e43;
+}
+
+.input input {
+    background-color: #f4f6f9;
+    border-color: #313e43 !important;
+}
+
+.input input:focus-within {
+    border-color: #1D9EAF !important;
+}
+
+.tr{
+    border-color: #313e43;
+}
+
+table td.table-d {
+    vertical-align: middle !important;
+    text-align: center !important;
+}
+
+.mantine-Table-th{
+    text-align: center;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.status-badge {
+    animation: pulse 1.5s infinite;
+    min-width: 100px;
+}
+
+
