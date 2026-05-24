@@ -81,8 +81,8 @@ function OrderEntry() {
                 customerId,
                 orderOriginId,
                 orderDestId,
-                orderNumber: `PP-${(orderCount + 1).padStart(5, '0')}`,
-                custPoNumber: (orderCount + 1).padStart(5, '0'),
+                orderNumber: `PP-${(orderCount + 1).toString().padStart(5, '0')}`,
+                custPoNumber: (orderCount + 1).toString().padStart(5, '0'),
                 shipDate: new Date(shipDate).toISOString().split('T')[0],
                 orderStatus: 'unplanned',
                 lineItems: lineItems.map(li => {
