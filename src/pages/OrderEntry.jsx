@@ -1,4 +1,4 @@
-import { Select, Input, NumberInput, Button, Table, Image, Card } from '@mantine/core'
+import { Select, Input, NumberInput, Button, Table, Image, Card , Radio , Group } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useEffect, useState, useContext } from "react";
 import { TitleContext } from '../context/TitleContext'
@@ -9,9 +9,15 @@ import '../styles/orderEntry.css'
 function OrderEntry() {
     const [orderCount, setOrderCount] = useState(null)
     const [products, setProducts] = useState([])
+    const [supplierProducts , setSupplierProducts] = useState([])
+    const [shipperProducts , setShipperProducts] = useState([])
     const [shipperLocations, setShipperLocations] = useState([])
     const [customerLocations, setCustomerLocations] = useState([])
+    const [company , setCompany] = useState(null)
+    const [radioValue , setRadioValue] = useState('outbound')
+    const [supplierLocations , setSupplierLocations] = useState([])
     const [customerId, setCustomerId] = useState(null)
+    const [supplierId , setSupplierId] = useState(null)
     const [shipDate, setShipDate] = useState(Date.now())
     const [orderOriginId, setOrderOriginId] = useState(null)
     const [orderDestId, setOrderDestId] = useState(null)
@@ -27,11 +33,19 @@ function OrderEntry() {
         getOrderFormData()
     }, [])
 
+    useEffect(()=>{
+        console.log('supplier locations' , supplierLocations)
+    },[supplierLocations])
+
+    useEffect(()=>{
+        console.log(company)
+    },[company])
+
     useEffect(() => {
-        if (!orderDestId) {
+        if (!orderDestId || radioValue === 'inbound') {
             return
         }
-
+        
         let matchLocation = customerLocations.find(loc => loc.id === orderDestId);
 
         if (!matchLocation) {
@@ -41,6 +55,33 @@ function OrderEntry() {
         setCustomerId(matchLocation.customer_id)
     }, [orderDestId])
 
+    useEffect(()=>{
+        if(radioValue === 'outbound'){
+            setOrderOriginId(null)
+            setOrderDestId(null)
+            setSupplierId(null)
+            setLineItems([{ id: 1, product: null, quantity: 0 }]);
+            setProducts(shipperProducts)
+        }
+
+        
+    },[radioValue])
+
+
+    useEffect(() => {
+    if (radioValue === 'inbound' && orderOriginId) {
+        getSupplierProducts()
+
+        let matchLocation = supplierLocations.find(loc => loc.id === orderDestId);
+
+        if (!matchLocation) {
+            return
+        }
+
+        setSupplierId(matchLocation.id)
+        
+    }
+    }, [orderOriginId])
 
     function addLineItem() {
         setLineItems([...lineItems, { id: Date.now(), product: null, quantity: 0 }])
@@ -54,6 +95,22 @@ function OrderEntry() {
         setLineItems(lineItems.map(li => li.id === lineItem ? { ...li, [field]: value } : li))
     }
 
+    async function getSupplierProducts(){
+        try{
+            let response = await fetch(`${API_URL}/api/orders/supplier-products/${orderOriginId}` , {
+                headers: {
+                    'Content-Type' : 'application/json'
+                }
+            });
+
+            let result = await response.json()
+
+            setProducts(result.supplierProducts)
+        }catch(error){
+            console.log(error)
+        }
+    }
+
     async function getOrderFormData() {
         try {
             let response = await fetch(`${API_URL}/api/orders/order-form`, {
@@ -65,9 +122,11 @@ function OrderEntry() {
             let result = await response.json()
 
             setCustomerLocations(result.customerLocations)
-            setProducts(result.products)
+            setShipperProducts(result.products)
             setOrderCount(result.orderCount)
             setShipperLocations(result.shipperLocations)
+            setCompany(result.company[0])
+            setSupplierLocations(result.supplierLocations)
         } catch (error) {
             console.log(error)
         }
@@ -78,11 +137,14 @@ function OrderEntry() {
         try {
 
             const payload = {
+                directionCategory: radioValue,
+                companyId: company.id, 
                 customerId,
+                supplierId,
                 orderOriginId,
                 orderDestId,
                 orderNumber: `PP-${(orderCount + 1).toString().padStart(5, '0')}`,
-                custPoNumber: (orderCount + 1).toString().padStart(5, '0'),
+                custPoNumber: radioValue === 'outbound' ? (orderCount + 1).toString().padStart(5, '0') : null,
                 shipDate: new Date(shipDate).toISOString().split('T')[0],
                 orderStatus: 'unplanned',
                 lineItems: lineItems.map(li => {
@@ -131,20 +193,30 @@ function OrderEntry() {
                     <div style={{ borderBottom: '1px solid #cccccc' }}>
                         <h3>Order Header Details</h3>
                     </div>
+                    <div>
+                        <Radio.Group label='Select Direction Category' value={radioValue} onChange={setRadioValue}>
+                            <Group>
+                                <Radio value='outbound' label='Outbound' />
+                                <Radio value='inbound' label='Inbound' />
+                            </Group>
+                        </Radio.Group>
+                    </div>
                     <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                             <label style={{ fontSize: '.8rem', fontWeight: '500' }}>Origin:</label>
                             <Select
                                 placeholder='Select Origin'
-                                data={shipperLocations.map(loc => ({ value: loc.id, label: `${loc.erp_id} - ${loc.name}` }))}
+                                value={orderOriginId}
+                                data={radioValue === 'outbound' ? shipperLocations.map(loc => ({ value: loc.id, label: `${loc.erp_id} - ${loc.name}` })) : supplierLocations?.map(loc => ({ value: loc.id, label: loc.name}))}
                                 onChange={setOrderOriginId}
                                 className='input' />
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
                             <label style={{ fontSize: '.8rem', fontWeight: '500' }}>Destination:</label>
                             <Select
-                                placeholder='Select Cust. Location'
-                                data={customerLocations.map(loc => ({ value: loc.id, label: loc.name }))}
+                                placeholder='Select Destination'
+                                value={orderDestId}
+                                data={radioValue === 'outbound' ? customerLocations.map(loc => ({ value: loc.id, label: loc.name })) : shipperLocations.map(loc => ({ value: loc.id, label: loc.name }))}
                                 onChange={setOrderDestId}
                                 className='input' />
                         </div>
@@ -160,7 +232,7 @@ function OrderEntry() {
 
             </Card>
 
-            <Card shadow="sm" padding="lg" radius="md" withBorder style={{ marginTop: '2rem', width: '75%' }}>
+            {orderOriginId && orderDestId && <Card shadow="sm" padding="lg" radius="md" withBorder style={{ marginTop: '2rem', width: '75%' }}>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', margin: 'auto', gap: '2rem' }}>
                     <div style={{ borderBottom: '1px solid #cccccc', width: '100%' }}>
                         <h3>Line Items</h3>
@@ -181,6 +253,7 @@ function OrderEntry() {
                                     <Table.Td className='table-d'>
                                         <Select
                                             className='input'
+                                            value={li.product}
                                             placeholder='Select Product'
                                             data={products.map(p => ({ value: p.id, label: `${p.material_number} - ${p.description}` }))}
                                             onChange={(value) => updateLineItem(li.id, 'product', value)}
@@ -215,7 +288,7 @@ function OrderEntry() {
                         </div>
                     </div>
                 </div>
-            </Card>
+            </Card>}
             <div style={{ display: 'flex', justifyContent: 'flex-end', width: '75%' }}>
                 <Button style={{ backgroundColor: '#1D9EAF' }} onClick={submitNewOrder}>Submit Order</Button>
             </div>
