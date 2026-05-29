@@ -62,9 +62,11 @@ function OrderEntry() {
             setSupplierId(null)
             setLineItems([{ id: 1, product: null, quantity: 0 }]);
             setProducts(shipperProducts)
+        }else{
+            setOrderOriginId(null)
+            setOrderDestId(null)
         }
 
-        
     },[radioValue])
 
 
@@ -123,6 +125,7 @@ function OrderEntry() {
 
             setCustomerLocations(result.customerLocations)
             setShipperProducts(result.products)
+            setProducts(result.products)
             setOrderCount(result.orderCount)
             setShipperLocations(result.shipperLocations)
             setCompany(result.company[0])
