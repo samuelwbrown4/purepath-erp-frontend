@@ -38,7 +38,7 @@ function OrderOverview() {
     }
 
     return (
-        <div style={{ height: '100vH' , display: 'flex' , justifyContent: 'center'}}>
+        <div style={{ height: '100vH' , display: 'flex' , justifyContent: 'center' , overflowY: 'scroll'}}>
             <Card style={{width: '85%' , marginTop: '2rem' , marginBottom: '2rem' , height: '85%'}}>
                 {(orders?.length > 0) && <Table>
                     <Table.Thead>
