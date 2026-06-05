@@ -59,15 +59,15 @@ function OrderOverview() {
                         {orders?.map(o => (
                             <Table.Tr key={o.id}>
                                 <Table.Td>{o.order_number}</Table.Td>
-                                <Table.Td><Badge className='status-badge'>{o.order_status ? o.order_status.toUpperCase().replaceAll('_',' ') : 'unplanned'}</Badge></Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.shipper_locations?.name : o.suppliers?.name}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.shipper_locations?.address : o.suppliers?.address}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.shipper_locations?.city : o.suppliers?.city}</Table.Td>
-                                <Table.Td>{o.direction_category === 'outbound' ? o.shipper_locations?.state : o.suppliers?.city}</Table.Td>
+                                <Table.Td>{o.direction_category === 'outbound' ? o.shipper_locations?.state : o.suppliers?.state}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.customer_locations?.name : o.shipper_locations?.name}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.customer_locations?.address : o.shipper_locations?.address}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.customer_locations?.city : o.shipper_locations?.city}</Table.Td>
                                 <Table.Td>{o.direction_category === 'outbound' ? o.customer_locations?.state : o.shipper_locations?.state}</Table.Td>
+                                <Table.Td><Badge className='status-badge'>{o.order_status ? o.order_status.toUpperCase().replaceAll('_',' ') : 'unplanned'}</Badge></Table.Td>
                                 
                             </Table.Tr>
                         )
