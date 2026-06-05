@@ -144,6 +144,8 @@ function OrderEntry() {
                 companyId: company.id, 
                 customerId,
                 supplierId,
+                shipperId: radioValue === 'outbound' ? orderOriginId : orderDestId,
+                customerLocId: radioValue === 'outbound' ? orderDestId : null,
                 orderOriginId,
                 orderDestId,
                 orderNumber: `PP-${(orderCount + 1).toString().padStart(5, '0')}`,
