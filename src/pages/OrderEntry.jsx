@@ -28,6 +28,11 @@ function OrderEntry() {
     const titleContext = useContext(TitleContext)
     const setTitle = titleContext.setTitle
 
+    const formatDate = (d) => {
+    const date = new Date(d);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
     useEffect(() => {
         setTitle('Order Entry')
         getOrderFormData()
@@ -74,7 +79,7 @@ function OrderEntry() {
     if (radioValue === 'inbound' && orderOriginId) {
         getSupplierProducts()
 
-        let matchLocation = supplierLocations.find(loc => loc.id === orderDestId);
+        let matchLocation = supplierLocations.find(loc => loc.id === orderOriginId);
 
         if (!matchLocation) {
             return
@@ -150,7 +155,7 @@ function OrderEntry() {
                 orderDestId,
                 orderNumber: `PP-${(orderCount + 1).toString().padStart(5, '0')}`,
                 custPoNumber: radioValue === 'outbound' ? (orderCount + 1).toString().padStart(5, '0') : null,
-                shipDate: new Date(shipDate).toISOString().split('T')[0],
+                shipDate: formatDate(shipDate),
                 orderStatus: 'unplanned',
                 lineItems: lineItems.map(li => {
                     const product = products.find(p => p.id === li.product);
