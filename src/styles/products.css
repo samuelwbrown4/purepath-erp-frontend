@@ -1,0 +1,49 @@
+.root{
+    background-color: #e8edf2;
+    color: #0D4479;
+    height: 100vH;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#new-product-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 3rem;
+}
+
+.input-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 3rem;
+}
+
+.new-product-input{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+
+.input input {
+    background-color: #f4f6f9;
+    border-color: #313e43 !important;
+}
+
+.input input:focus-within {
+    border-color: #1D9EAF !important;
+}
+
+#btn-div{
+    display: flex;
+    width: 25%;
+    justify-content: center;
+}
+

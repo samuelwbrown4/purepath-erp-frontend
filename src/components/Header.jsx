@@ -30,15 +30,8 @@ function Header() {
                                 <Menu.Item onClick={() => navigate('/orders/order-entry')}>Order Entry</Menu.Item>
                             </Menu.Sub.Dropdown>
                         </Menu.Sub>
-                        <Menu.Sub openDelay={120} closeDelay={150}>
-                            <Menu.Sub.Target>
-                                <Menu.Sub.Item>Products</Menu.Sub.Item>
-                            </Menu.Sub.Target>
-                            <Menu.Sub.Dropdown>
-                                <Menu.Item>Product Overview</Menu.Item>
-                                <Menu.Item>Add Products</Menu.Item>
-                            </Menu.Sub.Dropdown>
-                        </Menu.Sub>
+                            <Menu.Item onClick={() => navigate('/products')}>Products</Menu.Item>
+                            <Menu.Item onClick={() => navigate('/customers')}>Customers</Menu.Item>
                     </Menu.Dropdown>
                 </Menu>
                 <h4>PurePath, Inc.</h4>

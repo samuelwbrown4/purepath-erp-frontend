@@ -5,6 +5,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router'
 import {TitleProvider} from './context/TitleContext'
 import OrderEntry from './pages/OrderEntry';
 import OrderOverview from './pages/OrderOverview';
+import Products from './pages/Products';
+import CustomerLocations from './pages/CustomerLocations';
 import Layout from './components/Layout';
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
               <Route path={'/'} element={<Navigate to="/orders/order-entry" replace />} />
               <Route path={'/orders/order-entry'} element={<OrderEntry />} />
               <Route path={'/orders/overview'} element={<OrderOverview/>} />
+              <Route path={'/products'} element={<Products/>} />
+              <Route path={'/customers'} element={<CustomerLocations/>}/>
             </Route>
           </Routes>
         </BrowserRouter>
