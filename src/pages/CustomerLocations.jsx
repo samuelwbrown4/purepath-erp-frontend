@@ -166,7 +166,7 @@ function CustomerLocations() {
 
             let result = await response.json()
 
-            if(result.status === 201){
+            if(result.location){
                 setOpenCreateLocation(false)
                 getAllLocations()
             }
