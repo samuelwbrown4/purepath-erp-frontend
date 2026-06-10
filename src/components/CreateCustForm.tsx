@@ -1,7 +1,34 @@
 import {Modal , Input , Select , Button} from '@mantine/core';
 import '../styles/customerLocations.css'
 
-function CreateCustForm({name , setName , address , setAddress , city , setCity , state , setState , zip , setZip , custOrLoc , customers , customer , setCustomer , openCreateLocation , setOpenCreateLocation , openCreateCustomer , setOpenCreateCustomer , states , handleCreationClick}){
+interface Customer{
+    name: string,
+    id: string
+}
+interface CustomerFormProps{
+    name: string,
+    setName: (value: string) => void,
+    address: string,
+    setAddress: (value: string) => void,
+    city: string,
+    setCity: (value: string) => void,
+    state: string,
+    setState: (value: string | null) => void,
+    zip: string,
+    setZip: (value: string) => void,
+    custOrLoc: 'cust' | 'loc',
+    customer: string | null,
+    customers: Customer[],
+    setCustomer: (value: string | null) => void,
+    openCreateLocation: boolean,
+    setOpenCreateLocation: (value: boolean) => void,
+    openCreateCustomer: boolean,
+    setOpenCreateCustomer: (value: boolean) => void,
+    states: string[],
+    handleCreationClick: () => void
+}
+
+function CreateCustForm({name , setName , address , setAddress , city , setCity , state , setState , zip , setZip , custOrLoc , customers , customer , setCustomer , openCreateLocation , setOpenCreateLocation , openCreateCustomer , setOpenCreateCustomer , states , handleCreationClick}: CustomerFormProps){
     return (
         <Modal 
         opened={custOrLoc === 'cust' ? openCreateCustomer : openCreateLocation} 

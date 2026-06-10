@@ -1,12 +1,11 @@
 import { Image, Menu } from '@mantine/core';
-import { useContext } from 'react';
-import { Link, useNavigate } from 'react-router'
-import { TitleContext } from '../context/TitleContext'
+import {useNavigate } from 'react-router'
+import { useTitleContext } from '../context/TitleContext'
 import meridianErp from '../assets/meridian_erp_logo.png'
 import menuIcon from '../assets/list.svg'
 
 function Header() {
-    const titleContext = useContext(TitleContext)
+    const titleContext = useTitleContext()
     const title = titleContext.title
 
     const navigate = useNavigate()
@@ -14,7 +13,7 @@ function Header() {
         <div style={{ position: 'sticky', top: '0', zIndex: '100', backgroundColor: 'white', maxHeight: '10%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid black' }}>
             <div style={{ flex: '1', marginLeft: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
 
-                <Menu width={200} shadow='md' style={{zIndex: '10000'}}>
+                <Menu width={200} shadow='md' styles={{dropdown: {zIndex: 10000}}}>
                     <Menu.Target>
                         <Image className='icon' src={menuIcon} h={24} w={'auto'} />
                     </Menu.Target>
