@@ -1,6 +1,7 @@
 import { useTitleContext } from "../context/TitleContext";
 import { useContext, useEffect, useState } from 'react';
-import { Table, Card , Badge} from '@mantine/core'
+import { Table, Card , Badge} from '@mantine/core';
+import '../styles/orderOverview.css';
 
 interface OrderType{
     id: string,
@@ -71,7 +72,9 @@ function OrderOverview() {
     return (
         <div style={{ height: '100vH' , display: 'flex' , justifyContent: 'center' , overflowY: 'scroll'}}>
             <Card style={{width: '85%' , marginTop: '2rem' , marginBottom: '2rem' , height: '85%'}}>
-                {(orders?.length > 0) && <Table>
+                {(orders?.length > 0) && 
+                <div id='order-table-container'>
+                <Table>
                     <Table.Thead>
                         <Table.Tr>
                             <Table.Th>Order No.</Table.Th>
@@ -105,7 +108,8 @@ function OrderOverview() {
                         )
                         }
                     </Table.Tbody>
-                </Table>}
+                </Table>
+                </div>}
             </Card>
         </div>
     )

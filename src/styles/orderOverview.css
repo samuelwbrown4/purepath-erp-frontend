@@ -1,0 +1,9 @@
+#order-table-container {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#torder-table-container::-webkit-scrollbar {
+    display: none;
+}

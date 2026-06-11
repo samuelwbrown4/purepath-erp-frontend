@@ -1,4 +1,4 @@
-import { Select, Input, NumberInput, Button, Table, Image, Card, Radio, Group } from '@mantine/core'
+import { Select, Input, NumberInput, Button, Table, Image, Card, Radio, Group , Marquee } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useEffect, useState, useContext } from "react";
 import { useTitleContext } from '../context/TitleContext'
@@ -240,13 +240,19 @@ function OrderEntry() {
 
 
     return (
-        <div style={{ width: '100%', minHeight: '100vH', color: '#0D4479', display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center' }}>
+        <div style={{ width: '100%', minHeight: '100vH', color: '#0D4479', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+            <Card shadow="sm" padding="lg" radius="md" withBorder style={{ marginTop: '2rem', width: '60%' }}>
+                <div style={{display: 'flex' , flexDirection: 'column' , alignItems: 'center'}}>
+                    <h3 style={{borderBottom: '1px solid #cccccc' , paddingBottom: '1rem', marginTop: '0' , color: '#0D4479'}}>Welcome to Meridian: PurePath Inc's ERP! </h3>
+                    <span>To use with Routebase demo user accounts, Please create orders <u><b>to</b></u> or <u><b>from</b></u> PP01 (PurePath Omaha)</span>
+                </div>
+            </Card>
             <Card shadow="sm" padding="lg" radius="md" withBorder style={{ marginTop: '2rem', width: '75%' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                     <div style={{ borderBottom: '1px solid #cccccc' }}>
                         <h3>Order Header Details</h3>
                     </div>
-                    <div>
+                    <div style={{display: 'flex' , justifyContent: 'center'}}>
                         <Radio.Group label='Select Direction Category' value={radioValue} onChange={setRadioValue}>
                             <Group>
                                 <Radio value='outbound' label='Outbound' />
