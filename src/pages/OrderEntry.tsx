@@ -1,57 +1,97 @@
-import { Select, Input, NumberInput, Button, Table, Image, Card , Radio , Group } from '@mantine/core'
+import { Select, Input, NumberInput, Button, Table, Image, Card, Radio, Group } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useEffect, useState, useContext } from "react";
-import { TitleContext } from '../context/TitleContext'
+import { useTitleContext } from '../context/TitleContext'
 import plusIcon from '../assets/plus.svg';
 import trashIcon from '../assets/trash.svg';
 import '../styles/orderEntry.css'
 
+interface LocationType {
+    customer_id: string,
+    id: string,
+    name: string
+}
+
+interface SupplierLocationType {
+    id: string,
+    name: string
+}
+
+interface ShipperLocationType {
+    id: string,
+    erp_id: string,
+    name: string
+}
+
+interface ProductType {
+    material_number: string,
+    id: string,
+    description: string,
+    unit_of_measure: string,
+    weight: number
+    freight_class: number
+}
+
+interface LineItem {
+    id: number,
+    product: string | null,
+    quantity: number,
+    uom?: string | null,
+    weight?: number | null
+}
+
+interface CompanyType {
+    id: string,
+    name: string
+}
+
 function OrderEntry() {
-    const [orderCount, setOrderCount] = useState(null)
-    const [products, setProducts] = useState([])
-    const [supplierProducts , setSupplierProducts] = useState([])
-    const [shipperProducts , setShipperProducts] = useState([])
+    const [orderCount, setOrderCount] = useState<number | null>(null)
+    const [products, setProducts] = useState<ProductType[]>([])
+    const [supplierProducts, setSupplierProducts] = useState([])
+    const [shipperProducts, setShipperProducts] = useState([])
     const [shipperLocations, setShipperLocations] = useState([])
-    const [customerLocations, setCustomerLocations] = useState([])
-    const [company , setCompany] = useState(null)
-    const [radioValue , setRadioValue] = useState('outbound')
-    const [supplierLocations , setSupplierLocations] = useState([])
-    const [customerId, setCustomerId] = useState(null)
-    const [supplierId , setSupplierId] = useState(null)
-    const [shipDate, setShipDate] = useState(Date.now())
-    const [orderOriginId, setOrderOriginId] = useState(null)
-    const [orderDestId, setOrderDestId] = useState(null)
-    const [lineItems, setLineItems] = useState([{ id: 1, product: null, uom: null, quantity: 0, weight: null }])
+    const [customerLocations, setCustomerLocations] = useState<LocationType[]>([])
+    const [company, setCompany] = useState<CompanyType | null>(null)
+    const [radioValue, setRadioValue] = useState('outbound')
+    const [supplierLocations, setSupplierLocations] = useState<SupplierLocationType[]>([])
+    const [customerId, setCustomerId] = useState<string | null>(null)
+    const [supplierId, setSupplierId] = useState<string | null>(null)
+    const [shipDate, setShipDate] = useState<string | null>(null)
+    const [orderOriginId, setOrderOriginId] = useState<string | null>(null)
+    const [orderDestId, setOrderDestId] = useState<string | null>(null)
+    const [lineItems, setLineItems] = useState<LineItem[]>([{ id: 1, product: null, uom: null, quantity: 0, weight: null }])
 
     const API_URL = import.meta.env.VITE_API_URL
 
-    const titleContext = useContext(TitleContext)
+    const titleContext = useTitleContext()
     const setTitle = titleContext.setTitle
 
-    const formatDate = (d) => {
-    const date = new Date(d);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
+    const formatDate = (d: string | null) => {
+        if (!d) return ''
+        const [year, month, day] = d.split('T')[0].split('-')
+        return `${year}-${month}-${day}`
+    }
 
     useEffect(() => {
         setTitle('Order Entry')
         getOrderFormData()
     }, [])
 
-    useEffect(()=>{
-        console.log('supplier locations' , supplierLocations)
-    },[supplierLocations])
+    useEffect(() => {
+        console.log('supplier locations', supplierLocations)
+    }, [supplierLocations])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(company)
-    },[company])
+    }, [company])
 
     useEffect(() => {
         if (!orderDestId || radioValue === 'inbound') {
             return
         }
-        
-        let matchLocation = customerLocations.find(loc => loc.id === orderDestId);
+
+        let matchLocation = customerLocations.find((loc: LocationType) => loc.id === orderDestId);
 
         if (!matchLocation) {
             return
@@ -60,60 +100,60 @@ function OrderEntry() {
         setCustomerId(matchLocation.customer_id)
     }, [orderDestId])
 
-    useEffect(()=>{
-        if(radioValue === 'outbound'){
+    useEffect(() => {
+        if (radioValue === 'outbound') {
             setOrderOriginId(null)
             setOrderDestId(null)
             setSupplierId(null)
-            setLineItems([{ id: 1, product: null, quantity: 0 }]);
+            setLineItems([{ id: 1, product: null, quantity: 0, uom: 'EA', weight: null }]);
             setProducts(shipperProducts)
-        }else{
+        } else {
             setOrderOriginId(null)
             setOrderDestId(null)
         }
 
-    },[radioValue])
+    }, [radioValue])
 
 
     useEffect(() => {
-    if (radioValue === 'inbound' && orderOriginId) {
-        getSupplierProducts()
+        if (radioValue === 'inbound' && orderOriginId) {
+            getSupplierProducts()
 
-        let matchLocation = supplierLocations.find(loc => loc.id === orderOriginId);
+            let matchLocation = supplierLocations.find(loc => loc.id === orderOriginId);
 
-        if (!matchLocation) {
-            return
+            if (!matchLocation) {
+                return
+            }
+
+            setSupplierId(matchLocation.id)
+
         }
-
-        setSupplierId(matchLocation.id)
-        
-    }
     }, [orderOriginId])
 
     function addLineItem() {
         setLineItems([...lineItems, { id: Date.now(), product: null, quantity: 0 }])
     }
 
-    function removeLineItem(id) {
+    function removeLineItem(id: number) {
         setLineItems(lineItems.filter(li => li.id !== id))
     }
 
-    function updateLineItem(lineItem, field, value) {
+    function updateLineItem(lineItem: number, field: string, value: string | number | null) {
         setLineItems(lineItems.map(li => li.id === lineItem ? { ...li, [field]: value } : li))
     }
 
-    async function getSupplierProducts(){
-        try{
-            let response = await fetch(`${API_URL}/api/orders/supplier-products/${orderOriginId}` , {
+    async function getSupplierProducts() {
+        try {
+            let response = await fetch(`${API_URL}/api/orders/supplier-products/${orderOriginId}`, {
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
 
             let result = await response.json()
 
             setProducts(result.supplierProducts)
-        }catch(error){
+        } catch (error) {
             console.log(error)
         }
     }
@@ -144,9 +184,11 @@ function OrderEntry() {
     async function submitNewOrder() {
         try {
 
+            if (orderCount === null) return
+
             const payload = {
                 directionCategory: radioValue,
-                companyId: company.id, 
+                companyId: company?.id,
                 customerId,
                 supplierId,
                 shipperId: radioValue === 'outbound' ? orderOriginId : orderDestId,
@@ -159,6 +201,7 @@ function OrderEntry() {
                 orderStatus: 'unplanned',
                 lineItems: lineItems.map(li => {
                     const product = products.find(p => p.id === li.product);
+                    if (!product) return null
                     return {
                         productId: li.product,
                         materialNumber: product.material_number,
@@ -217,7 +260,7 @@ function OrderEntry() {
                             <Select
                                 placeholder='Select Origin'
                                 value={orderOriginId}
-                                data={radioValue === 'outbound' ? shipperLocations.map(loc => ({ value: loc.id, label: `${loc.erp_id} - ${loc.name}` })) : supplierLocations?.map(loc => ({ value: loc.id, label: loc.name}))}
+                                data={radioValue === 'outbound' ? shipperLocations.map((loc: ShipperLocationType) => ({ value: loc.id, label: `${loc.erp_id} - ${loc.name}` })) : supplierLocations?.map((loc: SupplierLocationType) => ({ value: loc.id, label: loc.name }))}
                                 onChange={setOrderOriginId}
                                 className='input' />
                         </div>
@@ -226,7 +269,7 @@ function OrderEntry() {
                             <Select
                                 placeholder='Select Destination'
                                 value={orderDestId}
-                                data={radioValue === 'outbound' ? customerLocations.map(loc => ({ value: loc.id, label: loc.name })) : shipperLocations.map(loc => ({ value: loc.id, label: loc.name }))}
+                                data={radioValue === 'outbound' ? customerLocations.map((loc: LocationType) => ({ value: loc.id, label: loc.name })) : shipperLocations.map((loc: ShipperLocationType) => ({ value: loc.id, label: loc.name }))}
                                 onChange={setOrderDestId}
                                 className='input' />
                         </div>
@@ -234,7 +277,7 @@ function OrderEntry() {
                             <label style={{ fontSize: '.8rem', fontWeight: '500' }}>Requested Ship Date:</label>
                             <DateInput
                                 value={shipDate}
-                                onChange={setShipDate}
+                                onChange={(value) => setShipDate(value)}
                                 className='input' />
                         </div>
                     </div>
@@ -258,43 +301,45 @@ function OrderEntry() {
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                            {lineItems.map(li => (
-                                <Table.Tr className='tr' key={li.id}>
-                                    <Table.Td className='table-d'>
-                                        <Select
-                                            className='input'
-                                            value={li.product}
-                                            placeholder='Select Product'
-                                            data={products.map(p => ({ value: p.id, label: `${p.material_number} - ${p.description}` }))}
-                                            onChange={(value) => updateLineItem(li.id, 'product', value)}
-                                        />
-                                    </Table.Td>
-                                    <Table.Td className='table-d'>
-                                        <NumberInput
-
-                                            className='qty input'
-                                            styles={{ wrapper: { width: '100%', margin: '0' } }}
-                                            placeholder='Qty'
-                                            value={li.quantity}
-                                            onChange={(value) => updateLineItem(li.id, 'quantity', value)}
-                                        />
-                                    </Table.Td>
-                                    <Table.Td className='table-d'>
-                                        {products.find(p => p.id === li.product) ? products.find(p => p.id === li.product)?.unit_of_measure : '-'}
-                                    </Table.Td>
-                                    <Table.Td className='table-d'>
-                                        {products.find(p => p.id === li.product) ? products.find(p => p.id === li.product)?.weight * li.quantity : '-'}
-                                    </Table.Td>
-                                    <Table.Td style={{ textAlign: 'center' }} className='table-d'>
-                                        {li.id !== 1 && <Image className='icon' src={trashIcon} h={24} w={'auto'} onClick={() => removeLineItem(li.id)} style={{ display: 'block', margin: '0 auto' }} />}
-                                    </Table.Td>
-                                </Table.Tr>
-                            ))}
+                            {lineItems.map(li => {
+                                const matchedProduct = products.find((p: ProductType) => p.id === li.product)
+                                return (
+                                    <Table.Tr className='tr' key={li.id}>
+                                        <Table.Td className='table-d'>
+                                            <Select
+                                                className='input'
+                                                value={li.product}
+                                                placeholder='Select Product'
+                                                data={products.map((p: ProductType) => ({ value: p.id, label: `${p.material_number} - ${p.description}` }))}
+                                                onChange={(value) => updateLineItem(li.id, 'product', value)}
+                                            />
+                                        </Table.Td>
+                                        <Table.Td className='table-d'>
+                                            <NumberInput
+                                                className='qty input'
+                                                styles={{ wrapper: { width: '100%', margin: '0' } }}
+                                                placeholder='Qty'
+                                                value={li.quantity}
+                                                onChange={(value) => updateLineItem(li.id, 'quantity', value)}
+                                            />
+                                        </Table.Td>
+                                        <Table.Td className='table-d'>
+                                            {matchedProduct ? matchedProduct.unit_of_measure : '-'}
+                                        </Table.Td>
+                                        <Table.Td className='table-d'>
+                                            {matchedProduct ? matchedProduct.weight * li.quantity : '-'}
+                                        </Table.Td>
+                                        <Table.Td style={{ textAlign: 'center' }} className='table-d'>
+                                            {li.id !== 1 && <Image className='icon' src={trashIcon} h={24} w={'auto'} onClick={() => removeLineItem(li.id)} style={{ display: 'block', margin: '0 auto' }} />}
+                                        </Table.Td>
+                                    </Table.Tr>
+                                )
+                            })}
                         </Table.Tbody>
                     </Table>
                     <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-                        <div onClick={addLineItem} className='icon' style={{display: 'flex', gap: '.5rem' , cursor: 'pointer'}}>
-                            <Image src={plusIcon} h={32} w={'auto'} style={{border: 'solid 2px #0D4479' , borderRadius: '50%' , backgroundColor: 'white'}} />
+                        <div onClick={addLineItem} className='icon' style={{ display: 'flex', gap: '.5rem', cursor: 'pointer' }}>
+                            <Image src={plusIcon} h={32} w={'auto'} style={{ border: 'solid 2px #0D4479', borderRadius: '50%', backgroundColor: 'white' }} />
                         </div>
                     </div>
                 </div>

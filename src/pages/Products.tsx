@@ -1,27 +1,36 @@
-import { TitleContext } from '../context/TitleContext';
+import { useTitleContext } from '../context/TitleContext';
 import { useState, useEffect, useContext } from 'react'
 import { Table, Card, Image, Input, NumberInput, Select, Button } from '@mantine/core';
 import plusIcon from '../assets/plus.svg'
 import trashIcon from '../assets/trash.svg';
 import '../styles/products.css';
 
+interface ProductType{
+    id: string,
+    material_number: string,
+    description: string,
+    weight: string,
+    freight_class: string | null,
+    unit_of_measure: string
+}
+
 function Products() {
     const API_URL = import.meta.env.VITE_API_URL
 
-    const data = useContext(TitleContext)
+    const data = useTitleContext()
     const setTitle = data.setTitle
 
-    const [products, setProducts] = useState([])
-    const [companyId , setCompanyId] = useState(null)
+    const [products, setProducts] = useState<ProductType[]>([])
+    const [companyId , setCompanyId] = useState<string | null>(null)
 
-    const [visibleEdit, setVisibleEdit] = useState(false)
+    const [visibleEdit, setVisibleEdit] = useState<boolean>(false)
 
     const [materialNumber, setMaterialNumber] = useState('')
     const [description, setDescription] = useState('')
-    const [weight, setWeight] = useState('')
-    const [freightClass, setFreightClass] = useState('')
+    const [weight, setWeight] = useState<number | string>('')
+    const [freightClass, setFreightClass] = useState<string | null>('')
 
-    const freightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250]
+    const freightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250].map(String)
 
     useEffect(() => {
         setTitle('Products')
@@ -158,8 +167,8 @@ function Products() {
                                     <Table.Td>EA</Table.Td>
                                 </Table.Tr>
                             }
-                            {products?.map(p => (
-                                <Table.Tr key={products.id}>
+                            {products?.map((p: ProductType) => (
+                                <Table.Tr key={p.id}>
                                     <Table.Td>{p.material_number}</Table.Td>
                                     <Table.Td>{p.description}</Table.Td>
                                     <Table.Td>{p.weight}</Table.Td>

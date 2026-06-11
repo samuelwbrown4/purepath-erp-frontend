@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, } from 'react'
+import { useTitleContext } from '../context/TitleContext';
 import { Card, Input, NumberInput, Select, Button } from '@mantine/core'
 
 import '../styles/products.css';
@@ -6,15 +7,19 @@ import '../styles/products.css';
 function ProductEntry() {
     const API_URL = import.meta.env.VITE_API_URL
 
-    const data = useContext(TitleContext)
+    const data = useTitleContext()
     const setTitle = data.setTitle
 
-    const freightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250]
+    useEffect(()=>{
+        setTitle('Product Entry')
+    },[])
+
+    const freightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250].map(String)
 
     const [materialNumber, setMaterialNumber] = useState('')
     const [description, setDescription] = useState('')
-    const [weight, setWeight] = useState('')
-    const [freightClass, setFreightClass] = useState('')
+    const [weight, setWeight] = useState<number | string>('')
+    const [freightClass, setFreightClass] = useState<string | null>('')
 
 
     return (
@@ -33,7 +38,7 @@ function ProductEntry() {
                         <span>Description</span>
                         <Input
                             value={description}
-                            onChange={(e) => (e.target.value)}
+                            onChange={(e) => setDescription(e.target.value)}
                             className='input'
                         />
                     </div>
@@ -50,7 +55,7 @@ function ProductEntry() {
                         <Select
                             value={freightClass}
                             data={freightClasses}
-                            onChange={setFreightClass}
+                            onChange={(value)=>setFreightClass(value)}
                             className='input'
                         />
                     </div>

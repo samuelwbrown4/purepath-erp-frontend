@@ -1,15 +1,46 @@
-import { TitleContext } from "../context/TitleContext";
+import { useTitleContext } from "../context/TitleContext";
 import { useContext, useEffect, useState } from 'react';
 import { Table, Card , Badge} from '@mantine/core'
 
+interface OrderType{
+    id: string,
+    order_number: string,
+    direction_category: string,
+    order_status: string
+    shipper_locations: ShipperLocationType,
+    suppliers: SupplierLocationType,
+    customer_locations: CustomerLocationType
+}
+
+interface ShipperLocationType{
+    name: string,
+    address: string,
+    city: string,
+    state: string
+}
+
+interface SupplierLocationType{
+    name: string,
+    address: string,
+    city: string,
+    state: string
+}
+
+interface CustomerLocationType{
+    name: string,
+    address: string,
+    city: string,
+    state: string
+}
+
 function OrderOverview() {
 
-    const titleContext = useContext(TitleContext);
+    const titleContext = useTitleContext();
     const setTitle = titleContext.setTitle
 
     const API_URL = import.meta.env.VITE_API_URL
 
-    const [orders, setOrders] = useState([])
+    const [orders, setOrders] = useState<OrderType[]>([])
 
     useEffect(() => {
         setTitle('Order Overview')

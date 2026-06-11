@@ -18,7 +18,6 @@ function Header() {
                         <Image className='icon' src={menuIcon} h={24} w={'auto'} />
                     </Menu.Target>
                     <Menu.Dropdown >
-                        <Menu.Item onClick={() => navigate('/home')}>Home</Menu.Item>
                         <Menu.Sub openDelay={120} closeDelay={150}>
                             <Menu.Sub.Target>
                                 <Menu.Sub.Item>Orders</Menu.Sub.Item>

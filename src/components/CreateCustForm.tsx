@@ -12,7 +12,7 @@ interface CustomerFormProps{
     setAddress: (value: string) => void,
     city: string,
     setCity: (value: string) => void,
-    state: string,
+    state: string | null,
     setState: (value: string | null) => void,
     zip: string,
     setZip: (value: string) => void,

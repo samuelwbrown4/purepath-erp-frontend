@@ -1,35 +1,50 @@
 import { useEffect, useState, useContext } from "react";
 import { Table, Card , Select , Button } from '@mantine/core'
-import { TitleContext } from "../context/TitleContext";
+import { useTitleContext } from "../context/TitleContext";
 import CreateCustForm from "../components/CreateCustForm";
 import '../styles/customerLocations.css';
+
+interface FilteredLocationsType{
+    id: string,
+    name: string,
+    city: string,
+    address: string,
+    state: string,
+    zip_code: string,
+    customer_id: string
+}
+
+interface CustomerType{
+    id: string,
+    name: string
+}
 
 function CustomerLocations() {
 
     const API_URL = import.meta.env.VITE_API_URL
 
-    const data = useContext(TitleContext)
+    const data = useTitleContext()
     const setTitle = data.setTitle
 
-    const [companyId , setCompanyId] = useState(null)
+    const [companyId , setCompanyId] = useState<string | null>(null)
 
-    const [locations , setLocations] = useState([])
-    const [customers , setCustomers] = useState([])
-    const [customerFilter , setCustomerFilter] = useState(null)
+    const [locations , setLocations] = useState<FilteredLocationsType[]>([])
+    const [customers , setCustomers] = useState<CustomerType[]>([])
+    const [customerFilter , setCustomerFilter] = useState<string | null>(null)
 
     const [openCreateCustomer , setOpenCreateCustomer] = useState(false)
     const [custName , setCustName] = useState('')
     const [custAddress , setCustAddress] = useState('')
     const [custCity , setCustCity] = useState('')
-    const [custState , setCustState] = useState('')
+    const [custState , setCustState] = useState<string | null>('')
     const [custZip , setCustZip] = useState('')
 
     const [openCreateLocation , setOpenCreateLocation] = useState(false)
-    const [customer , setCustomer] = useState(null)
+    const [customer , setCustomer] = useState<string | null>(null)
     const [locName , setLocName] = useState('')
     const [locAddress , setLocAddress] = useState('')
     const [locCity , setLocCity] = useState('')
-    const [locState , setLocState] = useState('')
+    const [locState , setLocState] = useState<string | null>('')
     const [locZip , setLocZip] = useState('')
 
     const states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"]
@@ -61,7 +76,7 @@ function CustomerLocations() {
     })
 
 
-    const filteredLocations = customerFilter ? locations.filter(l => l.customer_id === customerFilter) : locations
+    const filteredLocations = customerFilter ? locations.filter((l:FilteredLocationsType) => l.customer_id === customerFilter) : locations
 
     async function getAllCustomers(){
         try{
@@ -188,7 +203,7 @@ function CustomerLocations() {
                             placeholder='Select Customer'
                             value={customerFilter}
                             onChange={(value)=>setCustomerFilter(value)}
-                            data={customers.map(c=>(
+                            data={customers.map((c: CustomerType)=>(
                                 {
                                     value: c.id,
                                     label: c.name
@@ -213,7 +228,7 @@ function CustomerLocations() {
                             </Table.Tr>
                         </Table.Thead>
                         <Table.Tbody>
-                            {filteredLocations.map(l => (
+                            {filteredLocations.map((l:FilteredLocationsType) => (
                                 <Table.Tr key={l.id}>
                                     <Table.Td>{l.name}</Table.Td>
                                     <Table.Td>{l.address}</Table.Td>
