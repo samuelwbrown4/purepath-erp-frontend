@@ -25,10 +25,11 @@ interface CustomerFormProps{
     openCreateCustomer: boolean,
     setOpenCreateCustomer: (value: boolean) => void,
     states: string[],
-    handleCreationClick: () => void
+    handleCreationClick: () => void,
+    createLocationLoading?: boolean
 }
 
-function CreateCustForm({name , setName , address , setAddress , city , setCity , state , setState , zip , setZip , custOrLoc , customers , customer , setCustomer , openCreateLocation , setOpenCreateLocation , openCreateCustomer , setOpenCreateCustomer , states , handleCreationClick}: CustomerFormProps){
+function CreateCustForm({name , setName , address , setAddress , city , setCity , state , setState , zip , setZip , custOrLoc , customers , customer , setCustomer , openCreateLocation , setOpenCreateLocation , openCreateCustomer , setOpenCreateCustomer , states , handleCreationClick , createLocationLoading}: CustomerFormProps){
     return (
         <Modal 
         opened={custOrLoc === 'cust' ? openCreateCustomer : openCreateLocation} 
@@ -38,7 +39,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
         styles={{content: {padding: '2rem' , paddingTop: '0rem'}}}
         >
             <div style={{display: 'flex' , flexDirection: 'column' , gap: '2rem' , width: '100%' , alignItems: 'center'}}>
-                {custOrLoc === 'loc' && <div style={{display: 'flex' , flexDirection: 'column' , gap: '.5rem' , width: '40%'}}>
+                {custOrLoc === 'loc' && <div style={{display: 'flex' , flexDirection: 'column' , gap: '.5rem' , width: '40%' , alignItems: 'center'}}>
                     <span>Select Customer</span>
                     <Select
                     className='input'
@@ -52,7 +53,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
                     ))}
                     />
                 </div>}
-                <div style={{display: 'flex' , gap: '0.5rem' , width: '60%'}}>
+                <div style={{display: 'flex' , gap: '0.5rem' , width: '60%' , alignItems: 'center'}}>
                     <span>Name</span>
                     <Input 
                     className='input'
@@ -100,7 +101,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
                     </div>
                 </div>
                 <div>
-                    <Button color='#1D9EAF' onClick={()=>handleCreationClick()}>{`Add ${custOrLoc === 'cust' ? 'Customer' : 'Location'}`}</Button>
+                    <Button color='#1D9EAF' loading={createLocationLoading} onClick={()=>handleCreationClick()}>{`Add ${custOrLoc === 'cust' ? 'Customer' : 'Location'}`}</Button>
                 </div>
             </div>
         </Modal>

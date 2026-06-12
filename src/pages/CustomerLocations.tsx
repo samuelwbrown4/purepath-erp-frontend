@@ -47,6 +47,8 @@ function CustomerLocations() {
     const [locState , setLocState] = useState<string | null>('')
     const [locZip , setLocZip] = useState('')
 
+    const [createLocationLoading , setCreateLocationLoading] = useState(false)
+
     const states = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"]
 
     useEffect(() => {
@@ -162,6 +164,8 @@ function CustomerLocations() {
     async function createLocation(){
         if(!customer || !locName || !locAddress || !locCity || !locState || !locZip) return
         try{
+            setCreateLocationLoading(true)
+
             let payload = {
                 customer,
                 locName,
@@ -183,7 +187,17 @@ function CustomerLocations() {
 
             if(result.location){
                 setOpenCreateLocation(false)
+                setCreateLocationLoading(false)
                 getAllLocations()
+            }else if(result.error === 'Failed to create location in TMS'){
+                setCustomer(null)
+                setLocAddress('')
+                setLocName('')
+                setLocCity('')
+                setLocState(null)
+                setLocZip('')
+                setCreateLocationLoading(false)
+                return alert('Please enter valid address')
             }
         }catch(error){
             console.log(error)
@@ -191,8 +205,8 @@ function CustomerLocations() {
     }
     return (
         <div className='root'>
-            <CreateCustForm name={custName} setName={setCustName} address={custAddress} setAddress={setCustAddress} city={custCity} setCity={setCustCity} state={custState} setState={setCustState} zip={custZip} setZip={setCustZip} custOrLoc={'cust'} customers={customers} customer={customer} setCustomer={setCustomer} openCreateCustomer={openCreateCustomer} setOpenCreateCustomer={setOpenCreateCustomer} openCreateLocation={openCreateLocation} setOpenCreateLocation={setOpenCreateLocation} states={states} handleCreationClick={createCustomer}/>
-            <CreateCustForm name={locName} setName={setLocName} address={locAddress} setAddress={setLocAddress} city={locCity} setCity={setLocCity} state={locState} setState={setLocState} zip={locZip} setZip={setLocZip} custOrLoc={'loc'} customers={customers} customer={customer} setCustomer={setCustomer} openCreateCustomer={openCreateCustomer} setOpenCreateCustomer={setOpenCreateCustomer} openCreateLocation={openCreateLocation} setOpenCreateLocation={setOpenCreateLocation} states={states} handleCreationClick={createLocation}/>
+            <CreateCustForm name={custName} setName={setCustName} address={custAddress} setAddress={setCustAddress} city={custCity} setCity={setCustCity} state={custState} setState={setCustState} zip={custZip} setZip={setCustZip} custOrLoc={'cust'} customers={customers} customer={customer} setCustomer={setCustomer} openCreateCustomer={openCreateCustomer} setOpenCreateCustomer={setOpenCreateCustomer} openCreateLocation={openCreateLocation} setOpenCreateLocation={setOpenCreateLocation} states={states} handleCreationClick={createCustomer} />
+            <CreateCustForm name={locName} setName={setLocName} address={locAddress} setAddress={setLocAddress} city={locCity} setCity={setLocCity} state={locState} setState={setLocState} zip={locZip} setZip={setLocZip} custOrLoc={'loc'} customers={customers} customer={customer} setCustomer={setCustomer} openCreateCustomer={openCreateCustomer} setOpenCreateCustomer={setOpenCreateCustomer} openCreateLocation={openCreateLocation} setOpenCreateLocation={setOpenCreateLocation} states={states} handleCreationClick={createLocation} createLocationLoading={createLocationLoading}/>
             <Card shadow="sm" padding="lg" radius="md" withBorder style={{ width: '75%' }}>
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', margin: 'auto', gap: '2rem' }}>
                     <div style={{display: 'flex' , gap: '1rem' , width: '100%' , overflowY: 'scroll'}}>
