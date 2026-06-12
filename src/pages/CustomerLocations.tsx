@@ -217,7 +217,8 @@ function CustomerLocations() {
                         </div>
                         
                     </div>
-                    <Table className='table'>
+                    <div id='cust-loc-table-container'>
+                        <Table className='table'>
                         <Table.Thead>
                             <Table.Tr>
                                 <Table.Th>Name</Table.Th>
@@ -239,6 +240,7 @@ function CustomerLocations() {
                             ))}
                         </Table.Tbody>
                     </Table>
+                    </div>
                 </div>
 
             </Card>

@@ -65,6 +65,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
                     <div style={{display: 'flex' , flexDirection: 'column' , width: '40%'}}>
                         <span>Address</span>
                         <Input
+                        placeholder='123 Oak Lane'
                         className='input'
                         value={address}
                         onChange={(e)=>setAddress(e.target.value)}
@@ -73,6 +74,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
                     <div style={{display: 'flex' , flexDirection: 'column' }}>
                         <span>City</span>
                         <Input
+                        placeholder='Metropolis'
                         className='input'
                         value={city}
                         onChange={(e)=>setCity(e.target.value)}
@@ -90,6 +92,7 @@ function CreateCustForm({name , setName , address , setAddress , city , setCity 
                     <div style={{display: 'flex' , flexDirection: 'column' , width: '15%'}}>
                         <span>Zip</span>
                         <Input
+                        placeholder='12345'
                         className='input'
                         value={zip}
                         onChange={(e)=>setZip(e.target.value)}

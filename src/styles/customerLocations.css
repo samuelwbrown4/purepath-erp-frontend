@@ -21,3 +21,18 @@
 .input input:focus-within {
     border-color: #1D9EAF !important;
 }
+
+#cust-loc-table-container{
+    width: 100%;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+#cust-loc-table-container::-webkit-scrollbar {
+    display: none;
+}
+
+.input input::placeholder{
+    color: gray;
+}

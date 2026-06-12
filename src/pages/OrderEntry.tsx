@@ -243,7 +243,7 @@ function OrderEntry() {
         <div style={{ width: '100%', minHeight: '100vH', color: '#0D4479', display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
             <Card shadow="sm" padding="lg" radius="md" withBorder style={{ marginTop: '2rem', width: '60%' }}>
                 <div style={{display: 'flex' , flexDirection: 'column' , alignItems: 'center'}}>
-                    <h3 style={{borderBottom: '1px solid #cccccc' , paddingBottom: '1rem', marginTop: '0' , color: '#0D4479'}}>Welcome to Meridian: PurePath Inc's ERP! </h3>
+                    <h3 style={{borderBottom: '1px solid #cccccc' , paddingBottom: '1rem', marginTop: '0' , color: '#313e43'}}>Welcome to Meridian: PurePath Inc's ERP! </h3>
                     <span>To use with Routebase demo user accounts, Please create orders <u><b>to</b></u> or <u><b>from</b></u> PP01 (PurePath Omaha)</span>
                 </div>
             </Card>

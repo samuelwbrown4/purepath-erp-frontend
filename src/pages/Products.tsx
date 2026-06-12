@@ -5,7 +5,7 @@ import plusIcon from '../assets/plus.svg'
 import trashIcon from '../assets/trash.svg';
 import '../styles/products.css';
 
-interface ProductType{
+interface ProductType {
     id: string,
     material_number: string,
     description: string,
@@ -21,7 +21,7 @@ function Products() {
     const setTitle = data.setTitle
 
     const [products, setProducts] = useState<ProductType[]>([])
-    const [companyId , setCompanyId] = useState<string | null>(null)
+    const [companyId, setCompanyId] = useState<string | null>(null)
 
     const [visibleEdit, setVisibleEdit] = useState<boolean>(false)
 
@@ -54,8 +54,8 @@ function Products() {
         }
     }
 
-    async function addProduct(){
-        try{
+    async function addProduct() {
+        try {
             const payload = {
                 companyId,
                 materialNumber,
@@ -63,10 +63,10 @@ function Products() {
                 weight,
                 freightClass
             }
-            let response = await fetch(`${API_URL}/api/products/new` , {
+            let response = await fetch(`${API_URL}/api/products/new`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     payload
@@ -75,31 +75,31 @@ function Products() {
 
             let result = await response.json()
 
-            if(!result.product) return
-        }catch(error){
+            if (!result.product) return
+        } catch (error) {
             console.log(error)
         }
     }
 
-    async function getCompany(){
-        try{
-            let response = await fetch(`${API_URL}/api/companies/all` , {
+    async function getCompany() {
+        try {
+            let response = await fetch(`${API_URL}/api/companies/all`, {
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
 
             let result = await response.json();
 
-            if(!result.companies) return
+            if (!result.companies) return
 
             setCompanyId(result.companies[0].id)
-        }catch(error){
+        } catch (error) {
             console.log(error)
         }
     }
 
-    async function handleAddProductClick(){
+    async function handleAddProductClick() {
         await addProduct();
         setMaterialNumber('')
         setDescription('')
@@ -116,69 +116,70 @@ function Products() {
                     <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
                         <div style={{ display: 'flex', gap: '1rem', cursor: 'pointer' }}>
                             {!visibleEdit && <Image className='icon' onClick={() => setVisibleEdit(true)} src={plusIcon} h={32} w={'auto'} style={{ border: 'solid 2px #0D4479', borderRadius: '50%', backgroundColor: 'white' }} />}
-                            {visibleEdit && 
-                            <Button color='#1D9EAF' className='icon' onClick={()=>handleAddProductClick()}>Add Product</Button>
+                            {visibleEdit &&
+                                <Button color='#1D9EAF' className='icon' onClick={() => handleAddProductClick()}>Add Product</Button>
                             }
                             {visibleEdit && <Image className='icon' src={trashIcon} h={36} w={'auto'} onClick={() => setVisibleEdit(false)} style={{ display: 'block', margin: '0 auto' }} />}
                         </div>
                     </div>
-                    <Table>
-                        <Table.Thead>
-                            <Table.Tr>
-                                <Table.Th>Material Number</Table.Th>
-                                <Table.Th>Description</Table.Th>
-                                <Table.Th>Weight</Table.Th>
-                                <Table.Th>Freight Class</Table.Th>
-                                <Table.Th>UoM</Table.Th>
-                            </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>
-                            {visibleEdit &&
+                    <div id='products-table-container'>
+                        <Table>
+                            <Table.Thead>
                                 <Table.Tr>
-                                    <Table.Td>
-                                        <Input
-                                            value={materialNumber}
-                                            onChange={(e) => setMaterialNumber(e.target.value)}
-                                            className='input'
-                                        />
-                                    </Table.Td>
-                                    <Table.Td>
-                                        <Input
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                            className='input'
-                                        />
-                                    </Table.Td>
-                                    <Table.Td>
-                                        <NumberInput
-                                            value={weight}
-                                            onChange={(value) => setWeight(value)}
-                                            className='input'
-                                        />
-                                    </Table.Td>
-                                    <Table.Td>
-                                        <Select
-                                            value={freightClass}
-                                            data={freightClasses}
-                                            onChange={setFreightClass}
-                                            className='input'
-                                        />
-                                    </Table.Td>
-                                    <Table.Td>EA</Table.Td>
+                                    <Table.Th>Material Number</Table.Th>
+                                    <Table.Th>Description</Table.Th>
+                                    <Table.Th>Weight (lbs)</Table.Th>
+                                    <Table.Th>Freight Class</Table.Th>
+                                    <Table.Th>UoM</Table.Th>
                                 </Table.Tr>
-                            }
-                            {products?.map((p: ProductType) => (
-                                <Table.Tr key={p.id}>
-                                    <Table.Td>{p.material_number}</Table.Td>
-                                    <Table.Td>{p.description}</Table.Td>
-                                    <Table.Td>{p.weight}</Table.Td>
-                                    <Table.Td>{p.freight_class}</Table.Td>
-                                    <Table.Td>{p.unit_of_measure}</Table.Td>
-                                </Table.Tr>
-                            ))}
-                        </Table.Tbody>
-                    </Table>
-
+                            </Table.Thead>
+                            <Table.Tbody>
+                                {visibleEdit &&
+                                    <Table.Tr>
+                                        <Table.Td className='products-td'>
+                                            <Input
+                                                value={materialNumber}
+                                                onChange={(e) => setMaterialNumber(e.target.value)}
+                                                className='input'
+                                            />
+                                        </Table.Td>
+                                        <Table.Td className='products-td'>
+                                            <Input
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
+                                                className='input'
+                                            />
+                                        </Table.Td>
+                                        <Table.Td className='products-td'>
+                                            <NumberInput
+                                                value={weight}
+                                                onChange={(value) => setWeight(value)}
+                                                className='input'
+                                            />
+                                        </Table.Td>
+                                        <Table.Td className='products-td'>
+                                            <Select
+                                                value={freightClass}
+                                                data={freightClasses}
+                                                onChange={setFreightClass}
+                                                className='input'
+                                            />
+                                        </Table.Td>
+                                        <Table.Td>EA</Table.Td>
+                                    </Table.Tr>
+                                }
+                                {products?.map((p: ProductType) => (
+                                    <Table.Tr key={p.id}>
+                                        <Table.Td className='products-td'>{p.material_number}</Table.Td>
+                                        <Table.Td className='products-td'>{p.description}</Table.Td>
+                                        <Table.Td className='products-td'>{p.weight}</Table.Td>
+                                        <Table.Td className='products-td'>{p.freight_class}</Table.Td>
+                                        <Table.Td className='products-td'>{p.unit_of_measure}</Table.Td>
+                                    </Table.Tr>
+                                ))}
+                            </Table.Tbody>
+                        </Table>
+                    </div>
                 </div>
             </Card>
 

@@ -4,6 +4,6 @@
     scrollbar-width: none;
 }
 
-#torder-table-container::-webkit-scrollbar {
+#order-table-container::-webkit-scrollbar {
     display: none;
 }
